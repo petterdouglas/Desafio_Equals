@@ -1,4 +1,116 @@
 package com.equals.homologacao.model;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Transacao {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private LocalDateTime dataInicioTransacao;
+
+    private LocalDateTime dataEvento;
+
+    private LocalTime horaEvento;
+
+    @Column(name = "tipo_evento", length = 2)
+    private String tipoEvento;
+
+    @Column(name = "numero_serie_leitor", length = 38)
+    private String numeroSerieLeitor;
+
+    // o código de transação completa a identificação da tabela como uma chave secundária com 'id'
+    @Column(name = "codigo_transacao", unique = true, length = 32)
+    private String codigoTransacao;
+
+    @Column(name = "codigo_pedido", length = 20)
+    private String codigoPedido;
+
+    // valor total da transação em centavos
+    private Long valorTotal;
+
+    // valor total da transação em centavos
+    private Long valorParcela;
+
+    // tipo de pagamento baseado enum de TipoPagamento
+    private TipoPagamento tipoPagamento;
+
+    private Integer plano;
+
+    private Integer parcelaLiberada;
+
+    private Integer quantidadeParcelas;
+
+    private LocalDateTime dataPagamento;
+
+    private Long taxaParcelamentoComprador;
+
+    private Long tarifaBoletoComprador;
+
+    private Long valorOriginal;
+
+    private Long taxaParcelamentoVendedor;
+
+    private Long taxaIntermediacao;
+
+    private Long tarifaIntermediacao;
+
+    private Long tarifaBoletoVendedor;
+
+    private Long repasseAplicacao;
+
+    private Long valorLiquidoTransacao;
+
+    @Column(name = "status_pagamento", length = 2)
+    private String statusPagamento;
+
+    @Column(name = "meio_pagamento", length = 2)
+    private String meioPagamento;
+
+    @Column(name = "bandeira", length = 30)
+    private String bandeira;
+
+    @Column(name = "canal_entrada", length = 2)
+    private String canalEntrada;
+
+    @Column(name = "leitor", length = 2)
+    private String leitor;
+
+    @Column(name = "meio_captura", length = 2)
+    private String meioCaptura;
+
+    @Column(name = "numero_logico", length = 32)
+    private String numeroLogico;
+
+    @Column(name = "nsu", length = 11)
+    private String nsuDaTransacao;
+
+    @Column(name = "cartao_bin", length = 6)
+    private String cartaoBin;
+
+    @Column(name = "cartao_holder", length = 4)
+    private String cartaoHolder;
+
+    @Column(name = "codigo_autorizacao", length = 6)
+    private String codigoAutorizacao;
+
+    @Column(name = "codigo_cv", length = 32)
+    private String codigoCv;
+
+
+    @ManyToOne
+    @JoinColumn(name = "extrato_id", nullable = false)
+    private Extrato extrato;
+
 }
