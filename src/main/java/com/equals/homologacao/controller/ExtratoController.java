@@ -24,7 +24,7 @@ public class ExtratoController {
         if (!extratos.isEmpty()) {
             return ResponseEntity.ok(extratos);
         } else {
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.notFound().build();
         }
     }
 
@@ -34,7 +34,7 @@ public class ExtratoController {
         if (extrato != null) {
             return ResponseEntity.ok(extrato);
         } else {
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.notFound().build();
         }
     }
 

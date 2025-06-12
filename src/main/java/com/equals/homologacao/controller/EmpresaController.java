@@ -24,7 +24,7 @@ public class EmpresaController {
         if (!empresas.isEmpty()) {
             return ResponseEntity.ok(empresas);
         } else {
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.notFound().build();
         }
     }
 
@@ -34,7 +34,7 @@ public class EmpresaController {
         if (empresa != null) {
             return ResponseEntity.ok(empresa);
         } else {
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.notFound().build();
         }
     }
 

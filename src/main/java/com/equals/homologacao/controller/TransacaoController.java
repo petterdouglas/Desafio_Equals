@@ -1,7 +1,6 @@
 package com.equals.homologacao.controller;
 
 import com.equals.homologacao.dto.TransacaoDetalhadaDTO;
-import com.equals.homologacao.model.Transacao;
 import com.equals.homologacao.service.TransacaoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,17 +21,30 @@ public class TransacaoController {
         if (!transacoes.isEmpty()) {
             return ResponseEntity.ok(transacoes);
         } else {
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.notFound().build();
         }
     }
 
-    @GetMapping("/{transacaoId}")
+    @GetMapping("/id/{transacaoId}")
     public ResponseEntity<TransacaoDetalhadaDTO> buscarPorId(@PathVariable Long extratoId, @PathVariable Long transacaoId) {
         TransacaoDetalhadaDTO transacao = transacaoService.buscarTransacaoPorId(extratoId, transacaoId);
         if (transacao != null) {
             return ResponseEntity.ok(transacao);
         } else {
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/codigo/{codigoTransacao}")
+    public ResponseEntity<List<TransacaoDetalhadaDTO>> buscarPorCodigo(@PathVariable Long extratoId, @PathVariable String codigoTransacao) {
+        List<TransacaoDetalhadaDTO> transacoes = transacaoService.buscarTransacaoPorCodigo(extratoId, codigoTransacao);
+
+        if (!transacoes.isEmpty()) {
+            return ResponseEntity.ok(transacoes);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
 }
