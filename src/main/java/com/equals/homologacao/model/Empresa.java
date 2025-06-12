@@ -23,7 +23,7 @@ public class Empresa {
     private String codigoEstabelecimento;
 
     // possui relacionamento de 1:n com a entidade Extrato
-    @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Extrato> extratos = new ArrayList<>();
 

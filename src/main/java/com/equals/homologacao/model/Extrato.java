@@ -21,7 +21,7 @@ public class Extrato {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "empresa_id", nullable = false)
     @JsonBackReference
     private Empresa empresa;
@@ -35,7 +35,7 @@ public class Extrato {
 
     private LocalDate periodoFinal;
 
-    @OneToMany(mappedBy = "extrato", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "extrato", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Transacao> transacoes = new ArrayList<>();
 

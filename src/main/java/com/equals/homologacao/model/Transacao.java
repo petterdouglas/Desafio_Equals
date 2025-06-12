@@ -113,7 +113,7 @@ public class Transacao {
     @Column(name = "codigo_cv", length = 32)
     private String codigoCv;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "extrato_id", nullable = false)
     @JsonBackReference
     private Extrato extrato;
