@@ -7,6 +7,7 @@ import com.equals.homologacao.model.Transacao;
 import com.equals.homologacao.repository.EmpresaRepository;
 import com.equals.homologacao.repository.ExtratoRepository;
 import com.equals.homologacao.repository.TransacaoRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +18,7 @@ import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +28,7 @@ public class ImportacaoService {
     private final ExtratoRepository extratoRepository;
     private final TransacaoRepository transacaoRepository;
 
-
+    @Transactional
     public String importarDadosTransacoes(MultipartFile arquivo) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(arquivo.getInputStream()))) {
 
@@ -44,9 +46,14 @@ public class ImportacaoService {
 
                     }
                     case '1' -> { // Detalhe (transação)
-                        Transacao transacao = criarTransacao(linha, extrato);
-                        if (transacao != null) {
-                            transacaoRepository.save(transacao);
+                        Transacao novaTransacao = criarTransacao(linha, extrato);
+                        if (novaTransacao != null) {
+                            Optional<Transacao> transacaoExistente = transacaoRepository.findByCodigoTransacao(novaTransacao.getCodigoTransacao());
+                            if (transacaoExistente.isEmpty()) {
+                                transacaoRepository.save(novaTransacao);
+                            } else {
+                                System.out.println("Transação duplicada ignorada: " + novaTransacao.getCodigoTransacao());
+                            }
                         }
                     }
                     case '9' -> { // Trailer

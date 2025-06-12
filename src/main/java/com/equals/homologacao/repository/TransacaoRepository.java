@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TransacaoRepository extends JpaRepository<Transacao, Long> {
-    boolean existsByCodigoTransacao(String codigoTransacao);
+    Optional<Transacao> findByCodigoTransacao(String codigoTransacao);
 
     List<Transacao> findAllByExtratoId(Long extratoId);
 
