@@ -1,7 +1,7 @@
 package com.equals.homologacao.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,6 +23,7 @@ public class Extrato {
 
     @ManyToOne
     @JoinColumn(name = "empresa_id", nullable = false)
+    @JsonBackReference
     private Empresa empresa;
 
     @Column(name = "tipo_extrato", length = 2)
