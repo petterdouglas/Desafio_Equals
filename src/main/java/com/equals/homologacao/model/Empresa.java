@@ -1,5 +1,6 @@
 package com.equals.homologacao.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,11 +18,13 @@ public class Empresa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(unique = true, length = 10, nullable = false)
     private String codigoEstabelecimento;
-    private String cnpj;
+
     // possui relacionamento de 1:n com a entidade Extrato
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Extrato> extratos = new ArrayList<>();
 
 }

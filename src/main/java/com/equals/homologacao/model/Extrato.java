@@ -1,11 +1,13 @@
 package com.equals.homologacao.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,15 +20,24 @@ public class Extrato {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToOne
     @JoinColumn(name = "empresa_id", nullable = false)
     private Empresa empresa;
-    private String nomeArquivo;
+
+    @Column(name = "tipo_extrato", length = 2)
     private String tipoExtrato;
-    private LocalDateTime dataProcessamento;
-    private LocalDateTime periodoInicial;
-    private LocalDateTime periodoFinal;
+
+    private LocalDate dataProcessamento;
+
+    private LocalDate periodoInicial;
+
+    private LocalDate periodoFinal;
+
     @OneToMany(mappedBy = "extrato", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Transacao> transacoes = new ArrayList<>();
+
+    @Column(nullable = true)
     private Integer totalRegistros;
 }

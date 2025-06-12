@@ -1,11 +1,12 @@
 package com.equals.homologacao.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
@@ -18,20 +19,23 @@ public class Transacao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDateTime dataInicioTransacao;
+    private LocalDate dataInicioTransacao;
 
-    private LocalDateTime dataEvento;
+    private LocalDate dataEvento;
 
     private LocalTime horaEvento;
 
     @Column(name = "tipo_evento", length = 2)
     private String tipoEvento;
 
+    @Column(name = "tipo_transacao", length = 2)
+    private String tipoTransacao;
+
     @Column(name = "numero_serie_leitor", length = 38)
     private String numeroSerieLeitor;
 
     // o código de transação completa a identificação da tabela como uma chave secundária com 'id'
-    @Column(name = "codigo_transacao", unique = true, length = 32)
+    @Column(name = "codigo_transacao", length = 32)
     private String codigoTransacao;
 
     @Column(name = "codigo_pedido", length = 20)
@@ -44,6 +48,7 @@ public class Transacao {
     private Long valorParcela;
 
     // tipo de pagamento baseado enum de TipoPagamento
+    @Enumerated(EnumType.STRING)
     private TipoPagamento tipoPagamento;
 
     private Integer plano;
@@ -52,7 +57,7 @@ public class Transacao {
 
     private Integer quantidadeParcelas;
 
-    private LocalDateTime dataPagamento;
+    private LocalDate dataPagamento;
 
     private Long taxaParcelamentoComprador;
 
@@ -108,9 +113,9 @@ public class Transacao {
     @Column(name = "codigo_cv", length = 32)
     private String codigoCv;
 
-
     @ManyToOne
     @JoinColumn(name = "extrato_id", nullable = false)
+    @JsonBackReference
     private Extrato extrato;
 
 }
