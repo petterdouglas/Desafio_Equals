@@ -30,10 +30,6 @@ public class EmpresaService {
 
     private List<EmpresaDTO> converterParaDto(List<Empresa> empresas) {
 
-        if (empresas.isEmpty()) {
-            return null;
-        }
-
         List<EmpresaDTO> empresasDto = new ArrayList<>();
 
         for (Empresa empresa : empresas) {

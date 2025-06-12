@@ -36,9 +36,6 @@ public class TransacaoService {
     }
 
     private List<TransacaoDetalhadaDTO> converterParaDto(List<Transacao> transacoes) {
-        if (transacoes.isEmpty()) {
-            return null;
-        }
 
         List<TransacaoDetalhadaDTO> transacoesDto = new ArrayList<>();
 

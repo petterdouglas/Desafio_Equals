@@ -40,9 +40,6 @@ public class ExtratoService {
     }
 
     private List<ExtratoDTO> converterParaDto(List<Extrato> extratos) {
-        if (extratos.isEmpty()) {
-            return null;
-        }
 
         List<ExtratoDTO> extratosDto = new ArrayList<>();
 
