@@ -17,14 +17,22 @@ public class TransacaoController {
     private final TransacaoService transacaoService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<Transacao>> listarTodas(@PathVariable Long extratoId) {
-        List<Transacao> transacoes = transacaoService.listarPorExtrato(extratoId);
-        return ResponseEntity.ok(transacoes);
+    public ResponseEntity<List<TransacaoDetalhadaDTO>> listarTodas(@PathVariable Long extratoId) {
+        List<TransacaoDetalhadaDTO> transacoes = transacaoService.listarPorExtrato(extratoId);
+        if (!transacoes.isEmpty()) {
+            return ResponseEntity.ok(transacoes);
+        } else {
+            return ResponseEntity.noContent().build();
+        }
     }
 
     @GetMapping("/{transacaoId}")
     public ResponseEntity<TransacaoDetalhadaDTO> buscarPorId(@PathVariable Long extratoId, @PathVariable Long transacaoId) {
         TransacaoDetalhadaDTO transacao = transacaoService.buscarTransacaoPorId(extratoId, transacaoId);
-        return ResponseEntity.ok(transacao);
+        if (transacao != null) {
+            return ResponseEntity.ok(transacao);
+        } else {
+            return ResponseEntity.noContent().build();
+        }
     }
 }

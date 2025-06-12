@@ -21,7 +21,7 @@ public class EmpresaController {
     @GetMapping("/empresa/all")
     public ResponseEntity<List<EmpresaDTO>> listarTodas() {
         List<EmpresaDTO> empresas = empresaService.listarTodas();
-        if (empresas != null) {
+        if (!empresas.isEmpty()) {
             return ResponseEntity.ok(empresas);
         } else {
             return ResponseEntity.noContent().build();

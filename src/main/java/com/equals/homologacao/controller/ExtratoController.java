@@ -1,7 +1,6 @@
 package com.equals.homologacao.controller;
 
 import com.equals.homologacao.dto.ExtratoDTO;
-import com.equals.homologacao.model.Extrato;
 import com.equals.homologacao.service.ExtratoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,15 +19,23 @@ public class ExtratoController {
     private final ExtratoService extratoService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<Extrato>> listarTodos(@PathVariable Long codigoEmpresa) {
-        List<Extrato> extratos = extratoService.listarPorEmpresa(codigoEmpresa);
-        return ResponseEntity.ok(extratos);
+    public ResponseEntity<List<ExtratoDTO>> listarTodos(@PathVariable Long codigoEmpresa) {
+        List<ExtratoDTO> extratos = extratoService.listarPorEmpresa(codigoEmpresa);
+        if (!extratos.isEmpty()) {
+            return ResponseEntity.ok(extratos);
+        } else {
+            return ResponseEntity.noContent().build();
+        }
     }
 
     @GetMapping("/{extratoId}")
     public ResponseEntity<ExtratoDTO> buscarPorId(@PathVariable Long extratoId, @PathVariable Long codigoEmpresa) {
-        Extrato extrato = extratoService.buscarExtratoPorId(extratoId, codigoEmpresa);
-        return ResponseEntity.ok(extrato);
+        ExtratoDTO extrato = extratoService.buscarExtratoPorId(extratoId, codigoEmpresa);
+        if (extrato != null) {
+            return ResponseEntity.ok(extrato);
+        } else {
+            return ResponseEntity.noContent().build();
+        }
     }
 
 }
