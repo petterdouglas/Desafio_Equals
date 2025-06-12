@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  # Serviço do Banco de Dados PostgreSQL
+  postgres-db:
+    image: postgres:14-alpine
+    container_name: homologacao-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: petter116
+      POSTGRES_DB: extratos_equals
+    ports:
+      # Expõe a porta 5432 do contêiner para a porta 5432 da sua máquina
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # Serviço da aplicação
+  homologacao-app:
+    # Constrói a imagem a partir do Dockerfile na pasta atual (.)
+    build: .
+    container_name: homologacao-app
+    depends_on:
+      - postgres-db
+    ports:
+      - "8080:8080"
+    environment:
+      # Configuração da URL do banco para apontar para o serviço 'postgres-db'
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/extratos_equals
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: petter116
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+
+volumes:
+  postgres_data:
