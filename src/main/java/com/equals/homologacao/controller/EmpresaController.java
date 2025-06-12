@@ -1,6 +1,6 @@
 package com.equals.homologacao.controller;
 
-import com.equals.homologacao.model.Empresa;
+import com.equals.homologacao.dto.EmpresaDTO;
 import com.equals.homologacao.service.EmpresaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,15 +19,23 @@ public class EmpresaController {
     private final EmpresaService empresaService;
 
     @GetMapping("/empresa/all")
-    public ResponseEntity<List<Empresa>> listarTodas() {
-        List<Empresa> empresas = empresaService.listarTodas();
-        return ResponseEntity.ok(empresas);
+    public ResponseEntity<List<EmpresaDTO>> listarTodas() {
+        List<EmpresaDTO> empresas = empresaService.listarTodas();
+        if (empresas != null) {
+            return ResponseEntity.ok(empresas);
+        } else {
+            return ResponseEntity.noContent().build();
+        }
     }
 
     @GetMapping("/empresa/{codigoEmpresa}")
-    public ResponseEntity<Empresa> buscarPorId(@PathVariable String codigoEmpresa) {
-        Empresa empresa = empresaService.buscarPorCodigo(codigoEmpresa);
-        return ResponseEntity.ok(empresa);
+    public ResponseEntity<EmpresaDTO> buscarPorId(@PathVariable String codigoEmpresa) {
+        EmpresaDTO empresa = empresaService.buscarPorCodigo(codigoEmpresa);
+        if (empresa != null) {
+            return ResponseEntity.ok(empresa);
+        } else {
+            return ResponseEntity.noContent().build();
+        }
     }
 
 }

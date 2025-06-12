@@ -1,5 +1,6 @@
 package com.equals.homologacao.controller;
 
+import com.equals.homologacao.dto.TransacaoDetalhadaDTO;
 import com.equals.homologacao.model.Transacao;
 import com.equals.homologacao.service.TransacaoService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,8 @@ public class TransacaoController {
     }
 
     @GetMapping("/{transacaoId}")
-    public Transacao buscarPorId(@PathVariable Long extratoId, @PathVariable Long transacaoId) {
-        return transacaoService.buscarTransacaoPorId(extratoId, transacaoId);
+    public ResponseEntity<TransacaoDetalhadaDTO> buscarPorId(@PathVariable Long extratoId, @PathVariable Long transacaoId) {
+        TransacaoDetalhadaDTO transacao = transacaoService.buscarTransacaoPorId(extratoId, transacaoId);
+        return ResponseEntity.ok(transacao);
     }
 }

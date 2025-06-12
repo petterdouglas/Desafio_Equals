@@ -1,5 +1,6 @@
 package com.equals.homologacao.service;
 
+import com.equals.homologacao.dto.ExtratoDTO;
 import com.equals.homologacao.model.Empresa;
 import com.equals.homologacao.model.Extrato;
 import com.equals.homologacao.model.TipoPagamento;
@@ -17,6 +18,7 @@ import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,11 +27,47 @@ public class ExtratoService {
 
     private final ExtratoRepository extratoRepository;
 
-    public List<Extrato> listarPorEmpresa(Long empresaId) {
-        return extratoRepository.findAllByEmpresaId(empresaId);
+    public List<ExtratoDTO> listarPorEmpresa(Long empresaId) {
+        List<Extrato> extratos = extratoRepository.findAllByEmpresaId(empresaId);
+
+        return converterParaDto(extratos);
     }
 
-    public Extrato buscarExtratoPorId(Long extratoId, Long empresaId) {
-        return extratoRepository.findByEmpresaIdAndId(empresaId, extratoId).orElse(null);
+    public ExtratoDTO buscarExtratoPorId(Long extratoId, Long empresaId) {
+        Extrato extrato = extratoRepository.findByEmpresaIdAndId(empresaId, extratoId).orElse(null);
+
+        return converterParaDto(extrato);
     }
+
+    private List<ExtratoDTO> converterParaDto(List<Extrato> extratos) {
+        if (extratos.isEmpty()) {
+            return null;
+        }
+
+        List<ExtratoDTO> extratosDto = new ArrayList<>();
+
+        for (Extrato extrato : extratos) {
+            extratosDto.add(converterParaDto(extrato));
+        }
+
+        return extratosDto;
+    }
+
+    private ExtratoDTO converterParaDto(Extrato extrato) {
+        if (extrato == null) {
+            return null;
+        }
+
+        ExtratoDTO extratoDto = new ExtratoDTO();
+
+        extratoDto.setId(extrato.getId());
+        extratoDto.setDataProcessamento(extrato.getDataProcessamento());
+        extratoDto.setPeriodoInicial(extrato.getPeriodoInicial());
+        extratoDto.setPeriodoFinal(extrato.getPeriodoFinal());
+        extratoDto.setTipoExtrato(extrato.getTipoExtrato());
+        extratoDto.setTotalRegistros(extrato.getTotalRegistros());
+
+        return extratoDto;
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.equals.homologacao.controller;
 
+import com.equals.homologacao.dto.ExtratoDTO;
 import com.equals.homologacao.model.Extrato;
 import com.equals.homologacao.service.ExtratoService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class ExtratoController {
     }
 
     @GetMapping("/{extratoId}")
-    public ResponseEntity<Extrato> buscarPorId(@PathVariable Long extratoId, @PathVariable Long codigoEmpresa) {
+    public ResponseEntity<ExtratoDTO> buscarPorId(@PathVariable Long extratoId, @PathVariable Long codigoEmpresa) {
         Extrato extrato = extratoService.buscarExtratoPorId(extratoId, codigoEmpresa);
         return ResponseEntity.ok(extrato);
     }
