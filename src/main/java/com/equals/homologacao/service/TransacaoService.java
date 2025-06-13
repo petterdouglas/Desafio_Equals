@@ -4,9 +4,10 @@ import com.equals.homologacao.dto.TransacaoDetalhadaDTO;
 import com.equals.homologacao.model.Transacao;
 import com.equals.homologacao.repository.TransacaoRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +16,6 @@ import java.util.List;
 public class TransacaoService {
 
     private final TransacaoRepository transacaoRepository;
-    private final ConversionService conversionService;
 
     public List<TransacaoDetalhadaDTO> listarPorExtrato(Long extratoId) {
         List<Transacao> transacoes = transacaoRepository.findAllByExtratoId(extratoId);
@@ -23,8 +23,13 @@ public class TransacaoService {
         return converterParaDto(transacoes);
     }
 
-    public TransacaoDetalhadaDTO buscarTransacaoPorId(Long extratoId, Long transacaoId) {
-        Transacao transacao = transacaoRepository.findByExtratoIdAndId(extratoId, transacaoId).orElse(null);
+    public TransacaoDetalhadaDTO buscarTransacaoPorId(Long extratoId, String dataTransacao) {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+
+        // formata a data enviada como String para LocalDate e poder ser usada como comparador na busca no banco de dados
+        LocalDate dataEventoTransacao = LocalDate.parse(dataTransacao, dateFormatter);
+
+        Transacao transacao = transacaoRepository.findByExtratoIdAndDataEvento(extratoId, dataEventoTransacao).orElse(null);
 
         return converterParaDto(transacao);
     }

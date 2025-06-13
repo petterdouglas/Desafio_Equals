@@ -18,32 +18,20 @@ public class TransacaoController {
     @GetMapping("/all")
     public ResponseEntity<List<TransacaoDetalhadaDTO>> listarTodas(@PathVariable Long extratoId) {
         List<TransacaoDetalhadaDTO> transacoes = transacaoService.listarPorExtrato(extratoId);
-        if (!transacoes.isEmpty()) {
-            return ResponseEntity.ok(transacoes);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(transacoes);
     }
 
-    @GetMapping("/id/{transacaoId}")
-    public ResponseEntity<TransacaoDetalhadaDTO> buscarPorId(@PathVariable Long extratoId, @PathVariable Long transacaoId) {
-        TransacaoDetalhadaDTO transacao = transacaoService.buscarTransacaoPorId(extratoId, transacaoId);
-        if (transacao != null) {
-            return ResponseEntity.ok(transacao);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    @GetMapping("/id/{dataTransacao}")
+    public ResponseEntity<TransacaoDetalhadaDTO> buscarPorData(@PathVariable Long extratoId, @PathVariable String dataTransacao) {
+        TransacaoDetalhadaDTO transacao = transacaoService.buscarTransacaoPorId(extratoId, dataTransacao);
+        return ResponseEntity.ok(transacao);
     }
+
 
     @GetMapping("/codigo/{codigoTransacao}")
     public ResponseEntity<List<TransacaoDetalhadaDTO>> buscarPorCodigo(@PathVariable Long extratoId, @PathVariable String codigoTransacao) {
         List<TransacaoDetalhadaDTO> transacoes = transacaoService.buscarTransacaoPorCodigo(extratoId, codigoTransacao);
-
-        if (!transacoes.isEmpty()) {
-            return ResponseEntity.ok(transacoes);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(transacoes);
     }
 
 
