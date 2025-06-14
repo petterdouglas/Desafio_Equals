@@ -10,7 +10,7 @@ import java.time.LocalTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TransacaoResumidaDTO {
+public class TransacaoDTO {
 
     private Long id;
 
@@ -20,7 +20,11 @@ public class TransacaoResumidaDTO {
 
     private LocalTime horaEvento;
 
+    private String tipoEvento;
+
     private String tipoTransacao;
+
+    private String numeroSerieLeitor;
 
     private String codigoTransacao;
 
@@ -32,11 +36,27 @@ public class TransacaoResumidaDTO {
 
     private String tipoPagamento;
 
+    private Integer plano;
+
     private Integer parcelaLiberada;
 
     private Integer quantidadeParcelas;
 
     private LocalDate dataPagamento;
+
+    private Long taxaParcelamentoComprador;
+
+    private Long tarifaBoletoComprador;
+
+    private Long valorOriginal;
+
+    private Long taxaParcelamentoVendedor;
+
+    private Long taxaIntermediacao;
+
+    private Long tarifaIntermediacao;
+
+    private Long tarifaBoletoVendedor;
 
     private Long repasseAplicacao;
 
@@ -47,5 +67,23 @@ public class TransacaoResumidaDTO {
     private String meioPagamento;
 
     private String bandeira;
+
+    private String canalEntrada;
+
+    private String leitor;
+
+    private String meioCaptura;
+
+    private String numeroLogico;
+
+    private String nsuDaTransacao;
+
+    private String cartaoBin;
+
+    private String cartaoHolder;
+
+    private String codigoAutorizacao;
+
+    private String codigoCv;
 
 }

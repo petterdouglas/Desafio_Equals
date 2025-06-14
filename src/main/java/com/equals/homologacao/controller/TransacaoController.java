@@ -1,6 +1,6 @@
 package com.equals.homologacao.controller;
 
-import com.equals.homologacao.dto.TransacaoDetalhadaDTO;
+import com.equals.homologacao.dto.TransacaoDTO;
 import com.equals.homologacao.service.TransacaoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,8 +23,8 @@ public class TransacaoController {
             description = "Retorna uma lista com todas as transações pertencentes a um extrato específico, identificado pelo seu ID."
     )
     @GetMapping("/all")
-    public ResponseEntity<List<TransacaoDetalhadaDTO>> listarTodas(@PathVariable Long extratoId) {
-        List<TransacaoDetalhadaDTO> transacoes = transacaoService.listarPorExtrato(extratoId);
+    public ResponseEntity<List<TransacaoDTO>> listarTodas(@PathVariable Long extratoId) {
+        List<TransacaoDTO> transacoes = transacaoService.listarPorExtrato(extratoId);
         return ResponseEntity.ok(transacoes);
     }
 
@@ -33,8 +33,8 @@ public class TransacaoController {
             description = "Retorna uma transação realizada em certa data, que seja pertencente a um extrato específico, identificado pelo seu ID."
     )
     @GetMapping("/date/{dataTransacao}")
-    public ResponseEntity<List<TransacaoDetalhadaDTO>> buscarPorData(@PathVariable Long extratoId, @PathVariable String dataTransacao) {
-        List<TransacaoDetalhadaDTO> transacao = transacaoService.buscarTransacoesPorData(extratoId, dataTransacao);
+    public ResponseEntity<List<TransacaoDTO>> buscarPorData(@PathVariable Long extratoId, @PathVariable String dataTransacao) {
+        List<TransacaoDTO> transacao = transacaoService.buscarTransacoesPorData(extratoId, dataTransacao);
         return ResponseEntity.ok(transacao);
     }
 
@@ -43,8 +43,8 @@ public class TransacaoController {
             description = "Retorna uma transação de um certo código, que seja pertencente a um extrato específico, identificado pelo seu ID."
     )
     @GetMapping("/codigo/{codigoTransacao}")
-    public ResponseEntity<TransacaoDetalhadaDTO> buscarPorCodigo(@PathVariable Long extratoId, @PathVariable String codigoTransacao) {
-        TransacaoDetalhadaDTO transacao = transacaoService.buscarTransacaoPorCodigo(extratoId, codigoTransacao);
+    public ResponseEntity<TransacaoDTO> buscarPorCodigo(@PathVariable Long extratoId, @PathVariable String codigoTransacao) {
+        TransacaoDTO transacao = transacaoService.buscarTransacaoPorCodigo(extratoId, codigoTransacao);
         return ResponseEntity.ok(transacao);
     }
 

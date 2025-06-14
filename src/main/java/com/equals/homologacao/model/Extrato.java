@@ -39,6 +39,5 @@ public class Extrato {
     @JsonManagedReference
     private List<Transacao> transacoes = new ArrayList<>();
 
-    @Column(nullable = true)
     private Integer totalRegistros;
 }

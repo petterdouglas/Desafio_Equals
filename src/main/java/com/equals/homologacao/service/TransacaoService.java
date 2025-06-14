@@ -1,8 +1,8 @@
 package com.equals.homologacao.service;
 
+import com.equals.homologacao.dto.TransacaoDTO;
 import com.equals.homologacao.exception.DadoNaoEncontradoException;
 import com.equals.homologacao.exception.SemConteudoException;
-import com.equals.homologacao.dto.TransacaoDetalhadaDTO;
 import com.equals.homologacao.model.Transacao;
 import com.equals.homologacao.repository.TransacaoRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,10 +23,10 @@ public class TransacaoService {
      * Método responsável por listar todos as transações em um determinado extrato
      *
      * @param extratoId identificador do extrato detentor das transações
-     * @return Retorna uma lista de objetos de TransacaoDetalhadaDto
+     * @return Retorna uma lista de objetos de TransacaoDto
      * @throws SemConteudoException retorna uma mensagem de erro quando nenhuma transação é encontrada
      */
-    public List<TransacaoDetalhadaDTO> listarPorExtrato(Long extratoId) {
+    public List<TransacaoDTO> listarPorExtrato(Long extratoId) {
         List<Transacao> transacoes = transacaoRepository.findAllByExtratoId(extratoId);
 
         if (transacoes.isEmpty()) {
@@ -40,10 +40,10 @@ public class TransacaoService {
      * Método responsável por buscar uma transação de um determinado extrato pela data evento da transação
      *
      * @param extratoId identificador do extrato detentor das transações
-     * @return Retorna um objeto de TransacaoDetalhadaDTO
+     * @return Retorna um objeto de TransacaoDTO
      * @throws DadoNaoEncontradoException retorna uma mensagem de erro quando nenhuma transação é encontrada
      */
-    public List<TransacaoDetalhadaDTO> buscarTransacoesPorData(Long extratoId, String dataTransacao) {
+    public List<TransacaoDTO> buscarTransacoesPorData(Long extratoId, String dataTransacao) {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         // formata a data enviada como String para LocalDate e poder ser usada como comparador na busca no banco de dados
@@ -64,9 +64,9 @@ public class TransacaoService {
      *
      * @param extratoId       identificador do extrato detentor das transações
      * @param codigoTransacao código de identificação de uma transação
-     * @return Retorna um objeto de TransacaoDetalhadaDTO
+     * @return Retorna um objeto de TransacaoDTO
      */
-    public TransacaoDetalhadaDTO buscarTransacaoPorCodigo(Long extratoId, String codigoTransacao) {
+    public TransacaoDTO buscarTransacaoPorCodigo(Long extratoId, String codigoTransacao) {
         Transacao transacao = transacaoRepository.findByExtratoIdAndCodigoTransacao(extratoId, codigoTransacao);
 
         if (transacao == null) {
@@ -80,11 +80,11 @@ public class TransacaoService {
      * Método responsável por converter uma lista de objetos de Transacao para seu DTO
      *
      * @param transacoes lista de objetos de Transacao
-     * @return Retorna uma Lista de objetos de TransacaoDetalhadaDTO
+     * @return Retorna uma Lista de objetos de TransacaoDTO
      */
-    private List<TransacaoDetalhadaDTO> converterParaDto(List<Transacao> transacoes) {
+    private List<TransacaoDTO> converterParaDto(List<Transacao> transacoes) {
 
-        List<TransacaoDetalhadaDTO> transacoesDto = new ArrayList<>();
+        List<TransacaoDTO> transacoesDto = new ArrayList<>();
 
         for (Transacao transacao : transacoes) {
             transacoesDto.add(converterParaDto(transacao));
@@ -97,14 +97,14 @@ public class TransacaoService {
      * Método responsável por converter um objeto de Transacao para seu DTO
      *
      * @param transacao um objeto de Transacao
-     * @return Retorna um objeto de TransacaoDetalhadaDTO
+     * @return Retorna um objeto de TransacaoDTO
      */
-    private TransacaoDetalhadaDTO converterParaDto(Transacao transacao) {
+    private TransacaoDTO converterParaDto(Transacao transacao) {
         if (transacao == null) {
             return null;
         }
 
-        TransacaoDetalhadaDTO transacaoDto = new TransacaoDetalhadaDTO();
+        TransacaoDTO transacaoDto = new TransacaoDTO();
 
         transacaoDto.setId(transacao.getId());
         transacaoDto.setCodigoTransacao(transacao.getCodigoTransacao());
