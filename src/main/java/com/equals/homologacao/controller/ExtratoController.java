@@ -2,6 +2,8 @@ package com.equals.homologacao.controller;
 
 import com.equals.homologacao.dto.ExtratoDTO;
 import com.equals.homologacao.service.ExtratoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,28 +16,29 @@ import java.util.List;
 @RestController
 @RequestMapping("/empresa/{codigoEmpresa}/extrato")
 @RequiredArgsConstructor
+@Tag(name = "Extratos", description = "Endpoints para consultar os detalhes dos extratos de uma empresa")
 public class ExtratoController {
 
     private final ExtratoService extratoService;
 
+    @Operation(
+            summary = "Lista todos os extratos",
+            description = "Retorna todos os extratos de uma empresa detentora de um certo ID"
+    )
     @GetMapping("/all")
     public ResponseEntity<List<ExtratoDTO>> listarTodos(@PathVariable Long codigoEmpresa) {
         List<ExtratoDTO> extratos = extratoService.listarPorEmpresa(codigoEmpresa);
-        if (!extratos.isEmpty()) {
-            return ResponseEntity.ok(extratos);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(extratos);
     }
 
+    @Operation(
+            summary = "Busca um extrato pelo id",
+            description = "Retorna o extrato pelo seu ID, desde que seja de uma empresa com um certo ID"
+    )
     @GetMapping("/{extratoId}")
     public ResponseEntity<ExtratoDTO> buscarPorId(@PathVariable Long extratoId, @PathVariable Long codigoEmpresa) {
         ExtratoDTO extrato = extratoService.buscarExtratoPorId(extratoId, codigoEmpresa);
-        if (extrato != null) {
-            return ResponseEntity.ok(extrato);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(extrato);
     }
 
 }

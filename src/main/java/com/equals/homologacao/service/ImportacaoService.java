@@ -28,6 +28,13 @@ public class ImportacaoService {
     private final ExtratoRepository extratoRepository;
     private final TransacaoRepository transacaoRepository;
 
+    /**
+     * Método responsável pela leitura dos dados das linhas do arquivo recebido
+     * para cada entidade relacionada, com base no tipo explicito em cada linha
+     *
+     * @param arquivo arquivo importado
+     * @return Retorna uma mensagem de sucesso na importação dos dados
+     */
     @Transactional
     public String importarDadosTransacoes(MultipartFile arquivo) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(arquivo.getInputStream()))) {
@@ -72,10 +79,17 @@ public class ImportacaoService {
         }
     }
 
+    /**
+     * Método responsável pela alocação dos dados lidos para um objeto de Empresa
+     *
+     * @param linha linha específica do arquivo importado
+     * @return Retorna um objeto de Empresa
+     */
     public Empresa criarEmpresa(String linha) {
         String codigoEstabelecimento = linha.substring(1, 11).trim();
 
-        // Verifica se já existe no banco
+        // Verifica se a empresa já existe no banco,
+        // apenas caso não exista a nova empresa é salva no banco de dados
         return empresaRepository.findByCodigoEstabelecimento(codigoEstabelecimento)
                 .orElseGet(() -> {
                     Empresa nova = new Empresa();
@@ -84,6 +98,13 @@ public class ImportacaoService {
                 });
     }
 
+    /**
+     * Método responsável pela alocação dos dados lidos para um objeto de Extrato
+     *
+     * @param linha   linha específica do arquivo importado
+     * @param empresa objeto de Empresa para ser relacionada ao extrato
+     * @return Retorna um objeto de Extrato
+     */
     public Extrato criarExtrato(String linha, Empresa empresa) {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         Extrato e = new Extrato();
@@ -99,6 +120,13 @@ public class ImportacaoService {
         return e;
     }
 
+    /**
+     * Método responsável pela alocação dos dados lidos para um objeto de Transacao
+     *
+     * @param linha   linha específica do arquivo importado
+     * @param extrato objeto de Extrato para ser relacionado à transação
+     * @return Retorna um objeto de Transacao
+     */
     public Transacao criarTransacao(String linha, Extrato extrato) throws IOException {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmmss");
@@ -158,6 +186,9 @@ public class ImportacaoService {
         return t;
     }
 
+    /**
+     * Método de conversão de String para Long
+     */
     private Long parseLong(String campo) {
         try {
             return Long.parseLong(campo.trim());
@@ -166,6 +197,9 @@ public class ImportacaoService {
         }
     }
 
+    /**
+     * Método para conversão de String para um Integer
+     */
     private Integer parseInt(String campo) {
         try {
             return Integer.parseInt(campo.trim());

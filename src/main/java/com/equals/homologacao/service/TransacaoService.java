@@ -1,5 +1,7 @@
 package com.equals.homologacao.service;
 
+import com.equals.homologacao.exception.DadoNaoEncontradoException;
+import com.equals.homologacao.exception.SemConteudoException;
 import com.equals.homologacao.dto.TransacaoDetalhadaDTO;
 import com.equals.homologacao.model.Transacao;
 import com.equals.homologacao.repository.TransacaoRepository;
@@ -17,12 +19,30 @@ public class TransacaoService {
 
     private final TransacaoRepository transacaoRepository;
 
+    /**
+     * Método responsável por listar todos as transações em um determinado extrato
+     *
+     * @param extratoId identificador do extrato detentor das transações
+     * @return Retorna uma lista de objetos de TransacaoDetalhadaDto
+     * @throws SemConteudoException retorna uma mensagem de erro quando nenhuma transação é encontrada
+     */
     public List<TransacaoDetalhadaDTO> listarPorExtrato(Long extratoId) {
         List<Transacao> transacoes = transacaoRepository.findAllByExtratoId(extratoId);
+
+        if (transacoes.isEmpty()) {
+            throw new SemConteudoException("Nenhuma transação encontrada para o extrato de ID " + extratoId);
+        }
 
         return converterParaDto(transacoes);
     }
 
+    /**
+     * Método responsável por buscar uma transação de um determinado extrato pela data evento da transação
+     *
+     * @param extratoId identificador do extrato detentor das transações
+     * @return Retorna um objeto de TransacaoDetalhadaDTO
+     * @throws DadoNaoEncontradoException retorna uma mensagem de erro quando nenhuma transação é encontrada
+     */
     public TransacaoDetalhadaDTO buscarTransacaoPorId(Long extratoId, String dataTransacao) {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 
@@ -31,15 +51,36 @@ public class TransacaoService {
 
         Transacao transacao = transacaoRepository.findByExtratoIdAndDataEvento(extratoId, dataEventoTransacao).orElse(null);
 
+        if (transacao == null) {
+            throw new DadoNaoEncontradoException("Nenhuma transação realizada na data " + dataTransacao + " pelo extrato de ID " + extratoId);
+        }
+
         return converterParaDto(transacao);
     }
 
-    public List<TransacaoDetalhadaDTO> buscarTransacaoPorCodigo(Long extratoId, String codigoTransacao) {
-        List<Transacao> transacoes = transacaoRepository.findAllByExtratoIdAndCodigoTransacao(extratoId, codigoTransacao);
+    /**
+     * Método responsável por buscar uma transação de um determinado extrato pelo código da transação
+     *
+     * @param extratoId       identificador do extrato detentor das transações
+     * @param codigoTransacao código de identificação de uma transação
+     * @return Retorna um objeto de TransacaoDetalhadaDTO
+     */
+    public TransacaoDetalhadaDTO buscarTransacaoPorCodigo(Long extratoId, String codigoTransacao) {
+        Transacao transacao = transacaoRepository.findByExtratoIdAndCodigoTransacao(extratoId, codigoTransacao);
 
-        return converterParaDto(transacoes);
+        if (transacao == null) {
+            throw new DadoNaoEncontradoException("Nenhuma transação de código " + codigoTransacao + " realizada pelo extrato de ID " + extratoId);
+        }
+
+        return converterParaDto(transacao);
     }
 
+    /**
+     * Método responsável por converter uma lista de objetos de Transacao para seu DTO
+     *
+     * @param transacoes lista de objetos de Transacao
+     * @return Retorna uma Lista de objetos de TransacaoDetalhadaDTO
+     */
     private List<TransacaoDetalhadaDTO> converterParaDto(List<Transacao> transacoes) {
 
         List<TransacaoDetalhadaDTO> transacoesDto = new ArrayList<>();
@@ -51,6 +92,12 @@ public class TransacaoService {
         return transacoesDto;
     }
 
+    /**
+     * Método responsável por converter um objeto de Transacao para seu DTO
+     *
+     * @param transacao um objeto de Transacao
+     * @return Retorna um objeto de TransacaoDetalhadaDTO
+     */
     private TransacaoDetalhadaDTO converterParaDto(Transacao transacao) {
         if (transacao == null) {
             return null;
