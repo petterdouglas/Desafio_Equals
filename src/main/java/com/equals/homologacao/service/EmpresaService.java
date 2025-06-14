@@ -40,7 +40,7 @@ public class EmpresaService {
      * @return Retorna um objeto de EmpresaDTO
      * @throws DadoNaoEncontradoException retorna uma mensagem de erro quando nenhuma empresa é encontrada
      */
-    public EmpresaDTO buscarPorCodigo(String numeroEstabelecimento) {
+    public EmpresaDTO buscarPorNumero(String numeroEstabelecimento) {
         Empresa empresa = empresaRepository.findByNumeroEstabelecimento(numeroEstabelecimento).orElse(null);
 
         if (empresa == null) {

@@ -38,7 +38,7 @@ public class EmpresaController {
     )
     @GetMapping("/empresa/{numeroEmpresa}")
     public ResponseEntity<EmpresaDTO> buscarPorId(@PathVariable String numeroEmpresa) {
-        EmpresaDTO empresa = empresaService.buscarPorCodigo(numeroEmpresa);
+        EmpresaDTO empresa = empresaService.buscarPorNumero(numeroEmpresa);
         return ResponseEntity.ok(empresa);
     }
 
