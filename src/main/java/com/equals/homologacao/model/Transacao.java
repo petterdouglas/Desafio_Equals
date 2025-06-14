@@ -35,7 +35,7 @@ public class Transacao {
     private String numeroSerieLeitor;
 
     // o código de transação completa a identificação da tabela como uma chave secundária com 'id'
-    @Column(name = "codigo_transacao", length = 32)
+    @Column(name = "codigo_transacao", unique = true, length = 32)
     private String codigoTransacao;
 
     @Column(name = "codigo_pedido", length = 20)
