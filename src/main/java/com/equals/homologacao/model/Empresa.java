@@ -20,7 +20,7 @@ public class Empresa {
     private Long id;
 
     @Column(unique = true, length = 10, nullable = false)
-    private String codigoEstabelecimento;
+    private String numeroEstabelecimento;
 
     // possui relacionamento de 1:n com a entidade Extrato
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

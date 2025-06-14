@@ -12,6 +12,6 @@ public class EmpresaDTO {
 
     private Long id;
 
-    private String codigoEstabelecimento;
+    private String numeroEstabelecimento;
 
 }

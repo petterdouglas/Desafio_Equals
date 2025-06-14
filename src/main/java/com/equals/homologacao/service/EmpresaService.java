@@ -76,7 +76,7 @@ public class EmpresaService {
         EmpresaDTO empresaDto = new EmpresaDTO();
 
         empresaDto.setId(empresa.getId());
-        empresaDto.setCodigoEstabelecimento(empresa.getCodigoEstabelecimento());
+        empresaDto.setNumeroEstabelecimento(empresa.getNumeroEstabelecimento());
 
         return empresaDto;
     }
