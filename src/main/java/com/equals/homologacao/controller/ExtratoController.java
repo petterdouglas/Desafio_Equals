@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/empresa/{numeroEmpresa}/extrato")
+@RequestMapping("/empresa/{empresaId}/extrato")
 @RequiredArgsConstructor
 @Tag(name = "Extratos", description = "Endpoints para consultar os detalhes dos extratos de uma empresa")
 public class ExtratoController {
@@ -26,8 +26,8 @@ public class ExtratoController {
             description = "Retorna todos os extratos de uma empresa detentora de um certo ID"
     )
     @GetMapping("/all")
-    public ResponseEntity<List<ExtratoDTO>> listarTodos(@PathVariable Long numeroEmpresa) {
-        List<ExtratoDTO> extratos = extratoService.listarPorEmpresa(numeroEmpresa);
+    public ResponseEntity<List<ExtratoDTO>> listarTodos(@PathVariable Long empresaId) {
+        List<ExtratoDTO> extratos = extratoService.listarPorEmpresa(empresaId);
         return ResponseEntity.ok(extratos);
     }
 
@@ -36,8 +36,8 @@ public class ExtratoController {
             description = "Retorna o extrato pelo seu ID, desde que seja de uma empresa com um certo ID"
     )
     @GetMapping("/{extratoId}")
-    public ResponseEntity<ExtratoDTO> buscarPorId(@PathVariable Long extratoId, @PathVariable Long numeroEmpresa) {
-        ExtratoDTO extrato = extratoService.buscarExtratoPorId(extratoId, numeroEmpresa);
+    public ResponseEntity<ExtratoDTO> buscarPorId(@PathVariable Long extratoId, @PathVariable Long empresaId) {
+        ExtratoDTO extrato = extratoService.buscarExtratoPorId(extratoId, empresaId);
         return ResponseEntity.ok(extrato);
     }
 

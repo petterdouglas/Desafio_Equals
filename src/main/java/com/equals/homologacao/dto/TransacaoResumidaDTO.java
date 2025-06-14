@@ -10,7 +10,7 @@ import java.time.LocalTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TransacaoResumida {
+public class TransacaoResumidaDTO {
 
     private Long id;
 
