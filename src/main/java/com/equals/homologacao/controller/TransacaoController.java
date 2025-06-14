@@ -34,7 +34,7 @@ public class TransacaoController {
             summary = "Busca uma transação específica de um extrato pela data",
             description = "Retorna uma transação realizada em certa data, que seja pertencente a um extrato específico, identificado pelo seu ID."
     )
-    @GetMapping("/id/{dataTransacao}")
+    @GetMapping("/date/{dataTransacao}")
     public ResponseEntity<TransacaoDetalhadaDTO> buscarPorData(@PathVariable Long extratoId, @PathVariable String dataTransacao) {
         TransacaoDetalhadaDTO transacao = transacaoService.buscarTransacaoPorId(extratoId, dataTransacao);
         return ResponseEntity.ok(transacao);

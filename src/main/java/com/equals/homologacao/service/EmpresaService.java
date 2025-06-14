@@ -36,15 +36,15 @@ public class EmpresaService {
     /**
      * Método responsável por buscar uma empresa específica pelo numero do estabelecimento
      *
-     * @param codigoEstabelecimento numero de empresa buscada
+     * @param numeroEstabelecimento numero de empresa buscada
      * @return Retorna um objeto de EmpresaDTO
      * @throws DadoNaoEncontradoException retorna uma mensagem de erro quando nenhuma empresa é encontrada
      */
-    public EmpresaDTO buscarPorCodigo(String codigoEstabelecimento) {
-        Empresa empresa = empresaRepository.findByCodigoEstabelecimento(codigoEstabelecimento).orElse(null);
+    public EmpresaDTO buscarPorCodigo(String numeroEstabelecimento) {
+        Empresa empresa = empresaRepository.findByNumeroEstabelecimento(numeroEstabelecimento).orElse(null);
 
         if (empresa == null) {
-            throw new DadoNaoEncontradoException("Empresa de numero " + codigoEstabelecimento + " não encontrada.");
+            throw new DadoNaoEncontradoException("Empresa de numero " + numeroEstabelecimento + " não encontrada.");
         }
 
         return converterParaDto(empresa);
@@ -76,7 +76,7 @@ public class EmpresaService {
         EmpresaDTO empresaDto = new EmpresaDTO();
 
         empresaDto.setId(empresa.getId());
-        empresaDto.setCodigoEstabelecimento(empresa.getCodigoEstabelecimento());
+        empresaDto.setNumeroEstabelecimento(empresa.getNumeroEstabelecimento());
 
         return empresaDto;
     }

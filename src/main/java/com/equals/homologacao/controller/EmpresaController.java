@@ -33,12 +33,12 @@ public class EmpresaController {
     }
 
     @Operation(
-            summary = "Buscar uma certa empresa por um certo ID",
-            description = "Retorna uma empresa que detenha um certo ID"
+            summary = "Buscar uma certa empresa pelo seu número",
+            description = "Retorna uma empresa que detém determinado número"
     )
-    @GetMapping("/empresa/{codigoEmpresa}")
-    public ResponseEntity<EmpresaDTO> buscarPorId(@PathVariable String codigoEmpresa) {
-        EmpresaDTO empresa = empresaService.buscarPorCodigo(codigoEmpresa);
+    @GetMapping("/empresa/{numeroEmpresa}")
+    public ResponseEntity<EmpresaDTO> buscarPorId(@PathVariable String numeroEmpresa) {
+        EmpresaDTO empresa = empresaService.buscarPorCodigo(numeroEmpresa);
         return ResponseEntity.ok(empresa);
     }
 

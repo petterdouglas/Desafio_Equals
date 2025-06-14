@@ -86,14 +86,14 @@ public class ImportacaoService {
      * @return Retorna um objeto de Empresa
      */
     public Empresa criarEmpresa(String linha) {
-        String codigoEstabelecimento = linha.substring(1, 11).trim();
+        String numeroEstabelecimento = linha.substring(1, 11).trim();
 
         // Verifica se a empresa já existe no banco,
         // apenas caso não exista a nova empresa é salva no banco de dados
-        return empresaRepository.findByCodigoEstabelecimento(codigoEstabelecimento)
+        return empresaRepository.findByNumeroEstabelecimento(numeroEstabelecimento)
                 .orElseGet(() -> {
                     Empresa nova = new Empresa();
-                    nova.setCodigoEstabelecimento(codigoEstabelecimento);
+                    nova.setNumeroEstabelecimento(numeroEstabelecimento);
                     return empresaRepository.save(nova); // já salva se for nova
                 });
     }
