@@ -3,8 +3,6 @@ package com.equals.homologacao.controller;
 import com.equals.homologacao.dto.TransacaoDetalhadaDTO;
 import com.equals.homologacao.service.TransacaoService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -35,8 +33,8 @@ public class TransacaoController {
             description = "Retorna uma transação realizada em certa data, que seja pertencente a um extrato específico, identificado pelo seu ID."
     )
     @GetMapping("/date/{dataTransacao}")
-    public ResponseEntity<TransacaoDetalhadaDTO> buscarPorData(@PathVariable Long extratoId, @PathVariable String dataTransacao) {
-        TransacaoDetalhadaDTO transacao = transacaoService.buscarTransacaoPorId(extratoId, dataTransacao);
+    public ResponseEntity<List<TransacaoDetalhadaDTO>> buscarPorData(@PathVariable Long extratoId, @PathVariable String dataTransacao) {
+        List<TransacaoDetalhadaDTO> transacao = transacaoService.buscarTransacoesPorData(extratoId, dataTransacao);
         return ResponseEntity.ok(transacao);
     }
 

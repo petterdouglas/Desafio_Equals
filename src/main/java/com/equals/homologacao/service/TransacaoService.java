@@ -43,19 +43,20 @@ public class TransacaoService {
      * @return Retorna um objeto de TransacaoDetalhadaDTO
      * @throws DadoNaoEncontradoException retorna uma mensagem de erro quando nenhuma transação é encontrada
      */
-    public TransacaoDetalhadaDTO buscarTransacaoPorId(Long extratoId, String dataTransacao) {
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+    public List<TransacaoDetalhadaDTO> buscarTransacoesPorData(Long extratoId, String dataTransacao) {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         // formata a data enviada como String para LocalDate e poder ser usada como comparador na busca no banco de dados
         LocalDate dataEventoTransacao = LocalDate.parse(dataTransacao, dateFormatter);
 
-        Transacao transacao = transacaoRepository.findByExtratoIdAndDataEvento(extratoId, dataEventoTransacao).orElse(null);
+        List<Transacao> transacoes = transacaoRepository.findAllByExtratoIdAndDataEvento(extratoId, dataEventoTransacao);
 
-        if (transacao == null) {
+        if (transacoes.isEmpty()) {
             throw new DadoNaoEncontradoException("Nenhuma transação realizada na data " + dataTransacao + " pelo extrato de ID " + extratoId);
         }
 
-        return converterParaDto(transacao);
+
+        return converterParaDto(transacoes);
     }
 
     /**

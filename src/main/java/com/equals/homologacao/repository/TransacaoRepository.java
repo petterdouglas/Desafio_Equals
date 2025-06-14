@@ -14,5 +14,5 @@ public interface TransacaoRepository extends JpaRepository<Transacao, Long> {
 
     Transacao findByExtratoIdAndCodigoTransacao(Long extratoId, String codigoTransacao);
 
-    Optional<Transacao> findByExtratoIdAndDataEvento(Long extratoId, LocalDate dataEventoTransacao);
+    List<Transacao> findAllByExtratoIdAndDataEvento(Long extratoId, LocalDate dataEventoTransacao);
 }

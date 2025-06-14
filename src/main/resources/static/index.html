@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório de Transações - Equals</title>
+    <style>
+        :root {
+            --cor-primaria: #2980b9;
+            --cor-fundo: #f4f7f9;
+            --cor-borda: #dee2e6;
+            --cor-texto: #34495e;
+            --cor-cabecalho: #495057;
+            --cor-fundo-hover: #f1f3f5;
+            --sombra: 0 4px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--cor-fundo);
+            color: var(--cor-texto);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        header {
+            border-bottom: 2px solid var(--cor-borda);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: var(--cor-primaria);
+            margin: 0;
+        }
+
+        .dashboard {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .coluna {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: var(--sombra);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .coluna-sidebar {
+            flex: 1;
+            max-width: 300px;
+        }
+
+        .coluna-main {
+            flex: 3;
+        }
+
+        .coluna h2 {
+            margin-top: 0;
+            color: var(--cor-cabecalho);
+            border-bottom: 1px solid var(--cor-borda);
+            padding-bottom: 10px;
+        }
+
+        .lista-itens {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            overflow-y: auto;
+            max-height: 70vh;
+        }
+
+        .lista-itens li {
+            padding: 12px 15px;
+            border: 1px solid var(--cor-borda);
+            border-radius: 6px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .lista-itens li:hover {
+            border-color: var(--cor-primaria);
+            background-color: var(--cor-fundo-hover);
+        }
+
+        .lista-itens li.selecionado {
+            background-color: #eaf5fc;
+            border-left: 4px solid var(--cor-primaria);
+            font-weight: 600;
+        }
+
+        .lista-itens .item-titulo {
+            font-weight: 600;
+            display: block;
+        }
+
+        .lista-itens .item-detalhe {
+            font-size: 0.85em;
+            color: #7f8c8d;
+            display: block;
+            margin-top: 4px;
+        }
+
+        .tabela-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--cor-borda);
+            white-space: nowrap;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+
+        .mensagem-status {
+            text-align: center;
+            font-style: italic;
+            color: #95a5a6;
+            padding: 40px;
+        }
+
+        .filtro-transacoes {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .filtro-transacoes input {
+            flex-grow: 1;
+            padding: 8px 12px;
+            border: 1px solid var(--cor-borda);
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .filtro-transacoes button {
+            padding: 9px 20px;
+            background-color: var(--cor-primaria);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .filtro-transacoes button.limpar {
+            background-color: #95a5a6;
+        }
+
+        .filtro-transacoes button:hover {
+            opacity: 0.85;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Relatório de Vendas - Equals</h1>
+    </header>
+
+    <main class="dashboard">
+        <div class="coluna coluna-sidebar">
+            <h2>Empresas</h2>
+            <ul id="lista-empresas" class="lista-itens"></ul>
+            <p id="status-empresas" class="mensagem-status"></p>
+        </div>
+        <div class="coluna coluna-sidebar">
+            <h2>Extratos</h2>
+            <ul id="lista-extratos" class="lista-itens"></ul>
+            <p id="status-extratos" class="mensagem-status">Selecione uma empresa.</p>
+        </div>
+        <div class="coluna coluna-main">
+            <h2>Transações</h2>
+
+            <div class="filtro-transacoes">
+                <input type="text" id="filtro-input" placeholder="Filtrar por data (AAAA-MM-DD) ou código...">
+                <button id="btn-buscar-transacao">Buscar</button>
+                <button id="btn-limpar-filtro" class="limpar">Limpar</button>
+            </div>
+
+            <div class="tabela-wrapper">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Data Evento</th>
+                        <th>Hora</th>
+                        <th>Cód. Transação</th>
+                        <th>Valor Total</th>
+                        <th>Valor Líquido</th>
+                        <th>Parcelas</th>
+                        <th>Tipo Pagamento</th>
+                        <th>Bandeira</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tabela-transacoes-corpo"></tbody>
+                </table>
+            </div>
+            <p id="status-transacoes" class="mensagem-status">Selecione um extrato.</p>
+        </div>
+    </main>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const listaEmpresas = document.getElementById('lista-empresas');
+        const listaExtratos = document.getElementById('lista-extratos');
+        const tabelaTransacoesCorpo = document.getElementById('tabela-transacoes-corpo');
+        const statusEmpresas = document.getElementById('status-empresas');
+        const statusExtratos = document.getElementById('status-extratos');
+        const statusTransacoes = document.getElementById('status-transacoes');
+        const filtroInput = document.getElementById('filtro-input');
+        const btnBuscar = document.getElementById('btn-buscar-transacao');
+        const btnLimpar = document.getElementById('btn-limpar-filtro');
+
+        let extratoIdAtual = null;
+
+        const formatarValor = (valorEmCentavos) => {
+            const valor = (valorEmCentavos || 0) / 100;
+            return valor.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+        };
+
+        const limparSelecao = (lista) => {
+            lista.querySelectorAll('li').forEach(item => item.classList.remove('selecionado'));
+        };
+
+        // Função para renderizar os dados na tabela. Aceita um array de transações.
+        const renderizarTabela = (transacoes) => {
+            if (!transacoes || transacoes.length === 0) {
+                statusTransacoes.textContent = 'Nenhuma transação encontrada.';
+                statusTransacoes.style.display = 'block';
+                return;
+            }
+
+            statusTransacoes.style.display = 'none';
+
+            transacoes.forEach(t => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${t.dataEvento || ''}</td>
+                    <td>${t.horaEvento || ''}</td>
+                    <td>${t.codigoTransacao || ''}</td>
+                    <td>${formatarValor(t.valorTotal)}</td>
+                    <td>${formatarValor(t.valorLiquidoTransacao)}</td>
+                    <td>${t.parcelaLiberada || 'N/A'} / ${t.quantidadeParcelas || 'N/A'}</td>
+                    <td>${t.tipoPagamento || ''}</td>
+                    <td>${t.bandeira || ''}</td>
+                `;
+                tabelaTransacoesCorpo.appendChild(tr);
+            });
+        }
+
+        const buscarTransacoes = async (extratoId, termoFiltro = '') => {
+            tabelaTransacoesCorpo.innerHTML = '';
+            statusTransacoes.textContent = 'Carregando transações...';
+            statusTransacoes.style.display = 'block';
+
+            let url;
+            const isDate = /^\d{4}-\d{2}-\d{2}$/.test(termoFiltro);
+
+            if (!termoFiltro) {
+                url = `/extrato/${extratoId}/transacao/all`;
+            } else if (isDate) {
+                // Endpoint de data retorna uma lista
+                url = `/extrato/${extratoId}/transacao/date/${termoFiltro}`;
+            } else {
+                // Endpoint de código retorna um objeto único
+                url = `/extrato/${extratoId}/transacao/codigo/${encodeURIComponent(termoFiltro)}`;
+            }
+
+            try {
+                const response = await fetch(url);
+                if (response.status === 204 || response.status === 404) {
+                    renderizarTabela([]);
+                    return;
+                }
+                if (!response.ok) throw new Error(`Falha na API: ${response.statusText}`);
+
+                const dados = await response.json();
+
+                // Verifica se a resposta JÁ é um array.
+                // Se for (casos /all e /date/...), usa diretamente.
+                // Se não for (caso /codigo/...), envolve em um array para a função de renderização.
+                if (Array.isArray(dados)) {
+                    renderizarTabela(dados);
+                } else if (dados) {
+                    renderizarTabela([dados]); // Envolve o objeto único em um array
+                } else {
+                    renderizarTabela([]); // Caso de resposta vazia/nula
+                }
+
+            } catch (error) {
+                console.error('Erro ao buscar transações:', error);
+                statusTransacoes.textContent = 'Erro ao carregar transações.';
+            }
+        };
+
+        const buscarExtratos = async (empresaId) => {
+            listaExtratos.innerHTML = '';
+            tabelaTransacoesCorpo.innerHTML = '';
+            filtroInput.value = '';
+            statusExtratos.textContent = 'Carregando extratos...';
+            statusExtratos.style.display = 'block';
+            statusTransacoes.textContent = 'Selecione um extrato para ver as transações.';
+            statusTransacoes.style.display = 'block';
+            extratoIdAtual = null;
+
+            try {
+                const response = await fetch(`/empresa/${empresaId}/extrato/all`);
+                if (response.status === 204) {
+                    statusExtratos.textContent = 'Nenhum extrato encontrado para esta empresa.';
+                    return;
+                }
+                if (!response.ok) throw new Error('Falha na API de extratos');
+
+                const extratos = await response.json();
+                statusExtratos.style.display = 'none';
+
+                extratos.forEach(e => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <span class="item-titulo">Extrato ID: ${e.id}</span>
+                        <span class="item-detalhe">Período: ${e.periodoInicial} a ${e.periodoFinal}</span>
+                    `;
+                    li.addEventListener('click', () => {
+                        limparSelecao(listaExtratos);
+                        li.classList.add('selecionado');
+                        extratoIdAtual = e.id;
+                        buscarTransacoes(extratoIdAtual);
+                    });
+                    listaExtratos.appendChild(li);
+                });
+            } catch (error) {
+                console.error('Erro ao buscar extratos:', error);
+                statusExtratos.textContent = 'Erro ao carregar extratos.';
+            }
+        };
+
+        const buscarEmpresas = async () => {
+            listaEmpresas.innerHTML = '';
+            statusEmpresas.textContent = 'Carregando empresas...';
+            statusEmpresas.style.display = 'block';
+            try {
+                const response = await fetch('/empresa/all');
+                if (response.status === 204) {
+                    statusEmpresas.textContent = 'Nenhuma empresa cadastrada. Importe um arquivo primeiro.';
+                    return;
+                }
+                if (!response.ok) throw new Error('Falha na API de empresas');
+
+                const empresas = await response.json();
+                statusEmpresas.style.display = 'none';
+
+                empresas.forEach(emp => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <span class="item-titulo">ID: ${emp.id}</span>
+                        <span class="item-detalhe">Estabelecimento: ${emp.numeroEstabelecimento}</span>
+                    `;
+                    li.addEventListener('click', () => {
+                        limparSelecao(listaEmpresas);
+                        li.classList.add('selecionado');
+                        buscarExtratos(emp.id);
+                    });
+                    listaEmpresas.appendChild(li);
+                });
+            } catch (error) {
+                console.error('Erro ao buscar empresas:', error);
+                statusEmpresas.textContent = 'Erro ao carregar empresas.';
+            }
+        };
+
+        btnBuscar.addEventListener('click', () => {
+            if (extratoIdAtual) {
+                const termo = filtroInput.value.trim();
+                buscarTransacoes(extratoIdAtual, termo);
+            } else {
+                alert('Por favor, selecione um extrato primeiro.');
+            }
+        });
+
+        btnLimpar.addEventListener('click', () => {
+            if (extratoIdAtual) {
+                filtroInput.value = '';
+                buscarTransacoes(extratoIdAtual);
+            }
+        });
+
+        // Inicia o processo carregando as empresas
+        buscarEmpresas();
+    });
+</script>
+
+</body>
+</html>
